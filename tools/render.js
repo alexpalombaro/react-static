@@ -37,7 +37,7 @@ function getPages() {
 
 async function renderPage(page, component) {
   const data = {
-    body: ReactDOM.renderToString(component),
+    body: ReactDOM.renderToString(component)
   };
   const file = join(__dirname, '../build', page.file.substr(0, page.file.lastIndexOf('.')) + '.html');
   const html = '<!doctype html>\n' + ReactDOM.renderToStaticMarkup(<Html debug={DEBUG} {...data} />);

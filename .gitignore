@@ -4,26 +4,8 @@
 
 ## Directory-based project format:
 .idea/
-
-## Plugin-specific files:
-
-# IntelliJ
-/out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-### Node template
-# Logs
-logs
-*.log
-npm-debug.log*
-
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+/build
 
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
-

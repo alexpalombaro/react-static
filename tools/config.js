@@ -19,7 +19,7 @@ const AUTOPREFIXER_BROWSERS = [
   'Explorer >= 9',
   'iOS >= 7',
   'Opera >= 12',
-  'Safari >= 7.1',
+  'Safari >= 7.1'
 ];
 
 const JS_LOADER = {
@@ -29,9 +29,9 @@ const JS_LOADER = {
     path.resolve(__dirname, '../lib'),
     path.resolve(__dirname, '../pages'),
     path.resolve(__dirname, '../app.js'),
-    path.resolve(__dirname, '../config.js'),
+    path.resolve(__dirname, '../config.js')
   ],
-  loader: 'babel-loader',
+  loader: 'babel-loader'
 };
 
 
@@ -40,7 +40,7 @@ const config = {
   output: {
     path: path.join(__dirname, '../build'),
     publicPath: '/',
-    sourcePrefix: '  ',
+    sourcePrefix: '  '
   },
   cache: false,
   debug: DEBUG,
@@ -53,56 +53,56 @@ const config = {
     chunks: VERBOSE,
     chunkModules: VERBOSE,
     cached: VERBOSE,
-    cachedAssets: VERBOSE,
+    cachedAssets: VERBOSE
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': DEBUG ? '"development"' : '"production"',
-      '__DEV__': DEBUG,
-    }),
+      '__DEV__': DEBUG
+    })
   ],
   module: {
     loaders: [
       {
         test: /[\\\/]app\.js$/,
-        loader: path.join(__dirname, './lib/routes-loader.js'),
+        loader: path.join(__dirname, './lib/routes-loader.js')
       }, {
         test: /\.json$/,
-        loader: 'json-loader',
+        loader: 'json-loader'
       }, {
         test: /\.txt$/,
-        loader: 'raw-loader',
+        loader: 'raw-loader'
       }, {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
-        loader: 'url-loader?limit=10000',
+        loader: 'url-loader?limit=10000'
       }, {
         test: /\.(eot|ttf|wav|mp3)$/,
-        loader: 'file-loader',
-      },
-    ],
+        loader: 'file-loader'
+      }
+    ]
   },
   postcss: function plugins() {
     return [
       require('postcss-import')({
-        onImport: files => files.forEach(this.addDependency),
+        onImport: files => files.forEach(this.addDependency)
       }),
       require('precss')(),
       require('autoprefixer')({
         browsers: AUTOPREFIXER_BROWSERS
-      }),
+      })
     ];
-  },
+  }
 };
 
 // Configuration for the client-side bundle
 const appConfig = merge({}, config, {
   entry: [
     ...(WATCH ? ['webpack-hot-middleware/client'] : []),
-    './app.js',
+    './app.js'
   ],
   output: {
-    filename: 'app.js',
+    filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
   devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
@@ -115,12 +115,12 @@ const appConfig = merge({}, config, {
           warnings: VERBOSE
         }
       }),
-      new webpack.optimize.AggressiveMergingPlugin(),
+      new webpack.optimize.AggressiveMergingPlugin()
     ]),
     ...(WATCH ? [
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin(),
-    ] : []),
+      new webpack.NoErrorsPlugin()
+    ] : [])
   ],
   module: {
     loaders: [
@@ -135,23 +135,23 @@ const appConfig = merge({}, config, {
                 {
                   transform: 'react-transform-hmr',
                   imports: ['react'],
-                  locals: ['module'],
+                  locals: ['module']
                 }, {
                   transform: 'react-transform-catch-errors',
-                  imports: ['react', 'redbox-react'],
-                },
-              ],
-            },
-          },
-        },
+                  imports: ['react', 'redbox-react']
+                }
+              ]
+            }
+          }
+        }
       }) : JS_LOADER,
       ...config.module.loaders,
       {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'postcss-loader'],
-      },
-    ],
-  },
+        loaders: ['style-loader', 'css-loader', 'postcss-loader']
+      }
+    ]
+  }
 });
 
 // Configuration for server-side pre-rendering bundle
@@ -159,7 +159,7 @@ const pagesConfig = merge({}, config, {
   entry: './app.js',
   output: {
     filename: 'app.node.js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'commonjs2'
   },
   target: 'node',
   node: {
@@ -168,11 +168,11 @@ const pagesConfig = merge({}, config, {
     process: false,
     Buffer: false,
     __filename: false,
-    __dirname: false,
+    __dirname: false
   },
   externals: /^[a-z][a-z\.\-\/0-9]*$/i,
   plugins: config.plugins.concat([
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1})
   ]),
   module: {
     loaders: [
@@ -180,10 +180,10 @@ const pagesConfig = merge({}, config, {
       ...config.module.loaders,
       {
         test: /\.scss$/,
-        loaders: ['css-loader', 'postcss-loader'],
-      },
-    ],
-  },
+        loaders: ['css-loader', 'postcss-loader']
+      }
+    ]
+  }
 });
 
 export default [appConfig, pagesConfig];
