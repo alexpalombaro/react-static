@@ -15,7 +15,7 @@ class Html extends Component {
     title: PropTypes.string,
     description: PropTypes.string,
     body: PropTypes.string.isRequired,
-    debug: PropTypes.bool.isRequired,
+    debug: PropTypes.bool.isRequired
   };
 
   render() {

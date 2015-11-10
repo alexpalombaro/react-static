@@ -11,7 +11,7 @@ import task from './lib/task';
 const remote = {
   name: 'github',
   url: 'https://github.com/{user}/{repo}.git',
-  branch: 'gh-pages',
+  branch: 'gh-pages'
 };
 
 /**

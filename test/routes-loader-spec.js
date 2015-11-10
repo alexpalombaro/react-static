@@ -7,15 +7,23 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 
+import routes from '../tools/lib/routes-loader';
+
+import fs from 'fs';
+import path from 'path';
+
 describe('routes-loader', () => {
-  it('Should load a list of routes', done => {
+  it('Should load a list of routes', function (done) {
     this.cacheable = () => {};
     this.async = () => (err, result) => {
-      expect(err).to.be.null;
-      expect(result).to.not.to.be.empty.and.have.all.keys('/', '/404', '/500');
+      expect(err).to.equal(null);
+      let routes = /\sroutes[\s\S]+?(\{[\s\S]+?\})/.exec(result);
+      expect(routes).to.be.an('array');
+      expect(routes[1]).to.match(/\'.\/pages\/404\.js\'/);
       done();
     };
 
-    require('../tools/lib/routes-loader').call(this);
+    let source = fs.readFileSync(path.resolve(__dirname, '../app.js'), 'utf8');
+    routes.call(this, source);
   });
 });

@@ -5,7 +5,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import './Link.scss';
+//import './Link.scss';
 import Location from '../../lib/Location';
 
 function isLeftClickEvent(event) {
@@ -22,7 +22,7 @@ class Link extends Component {
     to: PropTypes.string.isRequired,
     children: PropTypes.element.isRequired,
     state: PropTypes.object,
-    onClick: PropTypes.func,
+    onClick: PropTypes.func
   };
 
   static handleClick = event => {
