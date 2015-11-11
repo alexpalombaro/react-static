@@ -6,6 +6,7 @@
 
 import React, { Component, PropTypes } from 'react';
 //import './Link.scss';
+import '../Navigation/Navigation.scss';
 import Location from '../../lib/Location';
 
 function isLeftClickEvent(event) {

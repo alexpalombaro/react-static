@@ -1,12 +1,13 @@
-require('babel/register');
+require('babel-core/register');
 
 function onError(err) {
   console.log(err.stack);
 }
 
 var args = process.argv.slice(2);
-switch (true) {
-  case args.indexOf('--start') > -1:
-    require('./start')().catch(onError);
-    break;
+var cmds = ['start', 'build', 'deploy', 'clean'];
+while(cmds.length) {
+  var cmd = cmds.shift();
+  if (args.indexOf(cmd) < 0) continue;
+  require('./' + cmd)().catch(onError);
 }

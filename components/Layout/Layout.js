@@ -11,7 +11,7 @@ import Navigation from '../Navigation';
 class Layout extends Component {
 
   static propTypes = {
-    children: PropTypes.element.isRequired,
+    children: PropTypes.element.isRequired
   };
 
   render() {

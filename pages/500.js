@@ -9,7 +9,7 @@ import React, { Component, PropTypes } from 'react';
 export default class extends Component {
 
   static propTypes = {
-    error: PropTypes.instanceOf(Error),
+    error: PropTypes.instanceOf(Error)
   };
 
   render() {

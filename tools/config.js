@@ -6,7 +6,6 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import merge from 'lodash.merge';
 
 const DEBUG = !process.argv.includes('release');
 const VERBOSE = process.argv.includes('verbose');
@@ -34,6 +33,10 @@ const JS_LOADER = {
   loader: 'babel-loader'
 };
 
+const CSS_LOADER = {
+  test: /\.scss$/,
+  loaders: ['style-loader', 'css-loader', 'postcss-loader']
+};
 
 // Base configuration
 const config = {
@@ -96,7 +99,7 @@ const config = {
 };
 
 // Configuration for the client-side bundle
-const appConfig = merge({}, config, {
+const appConfig = Object.assign({}, config, {
   entry: [
     ...(WATCH ? ['webpack-hot-middleware/client'] : []),
     './app.js'
@@ -145,17 +148,14 @@ const appConfig = merge({}, config, {
           }
         }
       }) : JS_LOADER,
-      ...config.module.loaders,
-      {
-        test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'postcss-loader']
-      }
+      CSS_LOADER,
+      ...config.module.loaders
     ]
   }
 });
 
 // Configuration for server-side pre-rendering bundle
-const pagesConfig = merge({}, config, {
+const pagesConfig = Object.assign({}, config, {
   entry: './app.js',
   output: {
     filename: 'app.node.js',
@@ -177,11 +177,10 @@ const pagesConfig = merge({}, config, {
   module: {
     loaders: [
       JS_LOADER,
-      ...config.module.loaders,
-      {
-        test: /\.scss$/,
-        loaders: ['css-loader', 'postcss-loader']
-      }
+      Object.assign({}, CSS_LOADER, {
+        loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
+      }),
+      ...config.module.loaders
     ]
   }
 });
