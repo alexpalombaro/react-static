@@ -7,7 +7,7 @@
 import glob from 'glob';
 import { join } from 'path';
 
-export default function(source) {
+module.exports = function(source) {
   this.cacheable();
   const target = this.target;
   const callback = this.async();
@@ -49,4 +49,4 @@ export default function(source) {
 
     return callback(new Error('Cannot find any routes.'));
   });
-}
+};

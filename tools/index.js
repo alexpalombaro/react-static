@@ -1,4 +1,5 @@
 require('babel-core/register');
+require('babel-polyfill');
 
 function onError(err) {
   console.log(err.stack);
@@ -9,5 +10,5 @@ var cmds = ['start', 'build', 'deploy', 'clean'];
 while(cmds.length) {
   var cmd = cmds.shift();
   if (args.indexOf(cmd) < 0) continue;
-  require('./' + cmd)().catch(onError);
+  require('./' + cmd).default().catch(onError);
 }

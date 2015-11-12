@@ -6,6 +6,9 @@
 
 import path from 'path';
 import webpack from 'webpack';
+import WebpackLoggerPlugin from 'webpack-logger-plugin';
+
+import {merge} from 'lodash';
 
 const DEBUG = !process.argv.includes('release');
 const VERBOSE = process.argv.includes('verbose');
@@ -63,7 +66,8 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': DEBUG ? '"development"' : '"production"',
       '__DEV__': DEBUG
-    })
+    }),
+    new WebpackLoggerPlugin({append: false})
   ],
   module: {
     loaders: [
@@ -99,7 +103,7 @@ const config = {
 };
 
 // Configuration for the client-side bundle
-const appConfig = Object.assign({}, config, {
+const appConfig = merge({}, config, {
   entry: [
     ...(WATCH ? ['webpack-hot-middleware/client'] : []),
     './app.js'
@@ -108,7 +112,8 @@ const appConfig = Object.assign({}, config, {
     filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
-  devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
+  //devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
+  devtool: false,
   plugins: [
     ...config.plugins,
     ...(DEBUG ? [] : [
@@ -127,7 +132,8 @@ const appConfig = Object.assign({}, config, {
   ],
   module: {
     loaders: [
-      WATCH ? Object.assign({}, JS_LOADER, {
+      ...config.module.loaders,
+      WATCH ? merge({}, JS_LOADER, {
         query: {
           // Wraps all React components into arbitrary transforms
           // https://github.com/gaearon/babel-plugin-react-transform
@@ -148,14 +154,13 @@ const appConfig = Object.assign({}, config, {
           }
         }
       }) : JS_LOADER,
-      CSS_LOADER,
-      ...config.module.loaders
+      CSS_LOADER
     ]
   }
 });
 
 // Configuration for server-side pre-rendering bundle
-const pagesConfig = Object.assign({}, config, {
+const pagesConfig = merge({}, config, {
   entry: './app.js',
   output: {
     filename: 'app.node.js',
@@ -176,11 +181,11 @@ const pagesConfig = Object.assign({}, config, {
   ]),
   module: {
     loaders: [
+      ...config.module.loaders,
       JS_LOADER,
       Object.assign({}, CSS_LOADER, {
         loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
-      }),
-      ...config.module.loaders
+      })
     ]
   }
 });
