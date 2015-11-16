@@ -11,11 +11,12 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 global.watch = true;
-const webpackConfig = require('./config')[0];
+const webpackConfig = require('./config').default[0];
+console.log(webpackConfig);
 const bundler = webpack(webpackConfig);
 
 export default async () => {
-  await require('./build')();
+  await require('./build').default();
 
   browserSync({
     server: {

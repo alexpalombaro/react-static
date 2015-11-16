@@ -112,8 +112,8 @@ const appConfig = merge({}, config, {
     filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
-  //devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
-  devtool: false,
+  devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
+  //devtool: false,
   plugins: [
     ...config.plugins,
     ...(DEBUG ? [] : [
@@ -132,7 +132,7 @@ const appConfig = merge({}, config, {
   ],
   module: {
     loaders: [
-      ...config.module.loaders,
+/*
       WATCH ? merge({}, JS_LOADER, {
         query: {
           // Wraps all React components into arbitrary transforms
@@ -154,6 +154,9 @@ const appConfig = merge({}, config, {
           }
         }
       }) : JS_LOADER,
+*/
+      JS_LOADER,
+      ...config.module.loaders,
       CSS_LOADER
     ]
   }
@@ -181,8 +184,8 @@ const pagesConfig = merge({}, config, {
   ]),
   module: {
     loaders: [
-      ...config.module.loaders,
       JS_LOADER,
+      ...config.module.loaders,
       Object.assign({}, CSS_LOADER, {
         loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
       })

@@ -13,7 +13,7 @@ module.exports = function(source) {
   const callback = this.async();
 
   if (target === 'node') {
-    source = source.replace('import \'babel/polyfill\';', ''); // eslint-disable-line no-param-reassign
+    source = source.replace('import \'babel-polyfill\';', ''); // eslint-disable-line no-param-reassign
   }
 
   glob('**/*.{js,jsx}', { cwd: join(__dirname, '../../pages') }, (err, files) => {
@@ -37,7 +37,7 @@ module.exports = function(source) {
       }
 
       if (target === 'node' || path === '/404' || path === '/500') {
-        return `  '${path}': () => require('./pages/${file}'),`;
+        return `  '${path}': () => require('./pages/${file}').default,`;
       }
 
       return `  '${path}': () => new Promise(resolve => require(['./pages/${file}'], resolve)),`;
