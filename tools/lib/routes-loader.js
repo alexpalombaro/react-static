@@ -37,7 +37,7 @@ module.exports = function(source) {
       }
 
       if (target === 'node' || path === '/404' || path === '/500') {
-        return `  '${path}': () => require('./pages/${file}').default,`;
+        return `  '${path}': () => require('./pages/${file}'),`;
       }
 
       return `  '${path}': () => new Promise(resolve => require(['./pages/${file}'], resolve)),`;

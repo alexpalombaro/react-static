@@ -46,7 +46,7 @@
   },
   "scripts": {
     "lint": "eslint src tools test",
-    "test": "mocha --compilers js:babel/register --watch",
+    "test": "mocha --compilers js:babel-register --watch",
     "clean": "node tools clean",
     "build": "node tools build",
     "start": "node tools start",
