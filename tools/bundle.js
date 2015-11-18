@@ -6,7 +6,7 @@
 
 import webpack from 'webpack';
 import task from './lib/task';
-import config from './config';
+import config from './webpackConfig';
 
 export default task(function bundle() {
   return new Promise((resolve, reject) => {

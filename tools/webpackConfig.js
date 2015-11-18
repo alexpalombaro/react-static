@@ -7,6 +7,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import WebpackLoggerPlugin from 'webpack-logger-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import {merge} from 'lodash';
 
@@ -38,7 +39,8 @@ const JS_LOADER = {
 
 const CSS_LOADER = {
   test: /\.scss$/,
-  loaders: ['style-loader', 'css-loader', 'postcss-loader']
+  loader: (WATCH ? 'style!css!sass' :
+    ExtractTextPlugin.extract('style-loader', ['css-loader', 'sass-loader']))
 };
 
 // Base configuration
@@ -67,7 +69,7 @@ const config = {
       'process.env.NODE_ENV': DEBUG ? '"development"' : '"production"',
       '__DEV__': DEBUG
     }),
-    new WebpackLoggerPlugin({append: false})
+    new WebpackLoggerPlugin({append: false}),
   ],
   module: {
     loaders: [
@@ -88,17 +90,6 @@ const config = {
         loader: 'file-loader'
       }
     ]
-  },
-  postcss: function plugins() {
-    return [
-      require('postcss-import')({
-        onImport: files => files.forEach(this.addDependency)
-      }),
-      require('precss')(),
-      require('autoprefixer')({
-        browsers: AUTOPREFIXER_BROWSERS
-      })
-    ];
   }
 };
 
@@ -134,7 +125,8 @@ const appConfig = merge({}, config, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'vendor.js'
-    })
+    }),
+  ...(WATCH ? [] : [new ExtractTextPlugin('[name].css')])
   ],
   module: {
     loaders: [
@@ -171,9 +163,12 @@ const pagesConfig = merge({}, config, {
     loaders: [
       JS_LOADER,
       ...config.module.loaders,
-      Object.assign({}, CSS_LOADER, {
-        loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
-      })
+      CSS_LOADER
+      /*
+       Object.assign({}, CSS_LOADER, {
+       loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
+       })
+       */
     ]
   }
 });
