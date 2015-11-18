@@ -14,10 +14,10 @@ export default class extends Component {
     return (
       <ul className="Navigation" role="menu">
         <li className="Navigation-item">
-          <a className="Navigation-link" href="/" onClick={Link.handleClick}>Home</a>
+          <a className="Navigation-link" href="/" onClick={Link.handleClick.bind(this)}>Home</a>
         </li>
         <li className="Navigation-item">
-          <a className="Navigation-link" href="/about" onClick={Link.handleClick}>About</a>
+          <a className="Navigation-link" href="/about" onClick={Link.handleClick.bind(this)}>About</a>
         </li>
       </ul>
     );

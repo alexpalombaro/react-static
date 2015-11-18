@@ -32,8 +32,9 @@ class Html extends Component {
       </head>
       <body>
       <div id="app" dangerouslySetInnerHTML={{__html: this.props.body}}/>
+      <script src="vendor.js"></script>
+      <script src="app.js"></script>
       <GoogleAnalytics />
-      <script src={'/app.js?' + new Date().getTime()}></script>
       </body>
       </html>
     );

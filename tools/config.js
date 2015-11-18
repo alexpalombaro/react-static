@@ -104,16 +104,18 @@ const config = {
 
 // Configuration for the client-side bundle
 const appConfig = merge({}, config, {
-  entry: [
-    ...(WATCH ? ['webpack-hot-middleware/client'] : []),
-    './app.js'
-  ],
+  entry: {
+    vendor: ['react', 'react-dom', 'babel-polyfill', 'history'],
+    app: [
+      ...(WATCH ? ['webpack-hot-middleware/client'] : []),
+      './app.js'
+    ]
+  },
   output: {
     filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
-  devtool: DEBUG ? 'cheap-module-eval-source-map' : false,
-  //devtool: false,
+  devtool: DEBUG ? 'source-map' : false,
   plugins: [
     ...config.plugins,
     ...(DEBUG ? [] : [
@@ -128,7 +130,11 @@ const appConfig = merge({}, config, {
     ...(WATCH ? [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin()
-    ] : [])
+    ] : []),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.js'
+    })
   ],
   module: {
     loaders: [
@@ -141,7 +147,9 @@ const appConfig = merge({}, config, {
 
 // Configuration for server-side pre-rendering bundle
 const pagesConfig = merge({}, config, {
-  entry: './app.js',
+  entry: {
+    app: './app.js'
+  },
   output: {
     filename: 'app.node.js',
     libraryTarget: 'commonjs2'
