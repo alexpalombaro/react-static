@@ -20,18 +20,18 @@ html, body {
 
 @media (min-width: $screen-sm-min) {
   .Layout {
-    width: calc($screen-sm-min - 18px);
+    width: $screen-sm-min - 18px;
   }
 }
 
 @media (min-width: $screen-md-min) {
   .Layout {
-    width: calc($screen-md-min - 22px);
+    width: $screen-md-min - 22px;
   }
 }
 
 @media (min-width: $screen-lg-min) {
   .Layout {
-    width: calc($screen-lg-min - 30px);
+    width: $screen-lg-min - 30px;
   }
 }

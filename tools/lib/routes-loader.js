@@ -7,7 +7,7 @@
 import glob from 'glob';
 import { join } from 'path';
 
-module.exports = function(source) {
+module.exports = function (source) {
   this.cacheable();
   const target = this.target;
   const callback = this.async();
@@ -16,7 +16,7 @@ module.exports = function(source) {
     source = source.replace('import \'babel-polyfill\';', ''); // eslint-disable-line no-param-reassign
   }
 
-  glob('**/*.{js,jsx}', { cwd: join(__dirname, '../../pages') }, (err, files) => {
+  glob('**/*.{js,jsx}', {cwd: join(__dirname, '../../pages')}, (err, files) => {
     if (err) {
       return callback(err);
     }

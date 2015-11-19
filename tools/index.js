@@ -6,7 +6,7 @@ function onError(err) {
 }
 
 var args = process.argv.slice(2);
-var cmds = ['start', 'build', 'deploy', 'clean', 'render'];
+var cmds = ['start', 'build', 'deploy', 'clean', 'render', 'serve'];
 while(cmds.length) {
   var cmd = cmds.shift();
   if (args.indexOf(cmd) < 0) continue;

@@ -9,7 +9,7 @@ import webpack from 'webpack';
 import WebpackLoggerPlugin from 'webpack-logger-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-import {merge} from 'lodash';
+import { merge } from 'lodash';
 
 const DEBUG = !process.argv.includes('release');
 const VERBOSE = process.argv.includes('verbose');
@@ -27,26 +27,21 @@ const AUTOPREFIXER_BROWSERS = [
 
 const JS_LOADER = {
   test: /\.jsx?$/,
-  include: [
-    path.resolve(__dirname, '../components'),
-    path.resolve(__dirname, '../lib'),
-    path.resolve(__dirname, '../pages'),
-    path.resolve(__dirname, '../app.js'),
-    path.resolve(__dirname, '../config.js')
-  ],
+  exclude: /node_modules/,
   loader: 'babel-loader'
 };
 
 const CSS_LOADER = {
   test: /\.scss$/,
-  loader: (WATCH ? 'style!css!sass' :
-    ExtractTextPlugin.extract('style-loader', ['css-loader', 'sass-loader']))
+  loaders: ['style-loader', 'css-loader', 'autoprefixer-loader?' + JSON.stringify({
+    browsers: AUTOPREFIXER_BROWSERS
+  }), 'sass-loader']
 };
 
 // Base configuration
 const config = {
   output: {
-    path: path.join(__dirname, '../build'),
+    path: path.resolve(__dirname, 'build'),
     publicPath: '/',
     sourcePrefix: '  '
   },
@@ -69,13 +64,14 @@ const config = {
       'process.env.NODE_ENV': DEBUG ? '"development"' : '"production"',
       '__DEV__': DEBUG
     }),
-    new WebpackLoggerPlugin({append: false}),
+    new ExtractTextPlugin('[name].css'),
+    new WebpackLoggerPlugin({append: false})
   ],
   module: {
     loaders: [
       {
         test: /[\\\/]app\.js$/,
-        loader: path.join(__dirname, './lib/routes-loader.js')
+        loader: path.join(__dirname, 'tools/lib/routes-loader.js')
       }, {
         test: /\.json$/,
         loader: 'json-loader'
@@ -106,7 +102,7 @@ const appConfig = merge({}, config, {
     filename: 'app.js'
   },
   // http://webpack.github.io/docs/configuration.html#devtool
-  devtool: DEBUG ? 'source-map' : false,
+  devtool: DEBUG ? 'inline-source-map' : false,
   plugins: [
     ...config.plugins,
     ...(DEBUG ? [] : [
@@ -125,14 +121,19 @@ const appConfig = merge({}, config, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'vendor.js'
-    }),
-  ...(WATCH ? [] : [new ExtractTextPlugin('[name].css')])
+    })
   ],
   module: {
     loaders: [
       JS_LOADER,
       ...config.module.loaders,
-      CSS_LOADER
+      WATCH ? CSS_LOADER : (() => {
+        const [first, ...rest] = CSS_LOADER.loaders;
+        return {
+          test: CSS_LOADER.test,
+          loader: ExtractTextPlugin.extract(first, rest.join('!'))
+        }
+      })()
     ]
   }
 });
@@ -163,12 +164,9 @@ const pagesConfig = merge({}, config, {
     loaders: [
       JS_LOADER,
       ...config.module.loaders,
-      CSS_LOADER
-      /*
-       Object.assign({}, CSS_LOADER, {
-       loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
-       })
-       */
+      Object.assign({}, CSS_LOADER, {
+        loaders: CSS_LOADER.loaders.filter(n => n !== 'style-loader')
+      })
     ]
   }
 });
